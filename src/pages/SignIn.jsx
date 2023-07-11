@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import OAuth from "../components/OAuth";
+import { auth } from "../Firebase";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,12 +14,65 @@ const SignIn = () => {
   });
   const { email, password } = formData;
 
+  const navigate = useNavigate();
+
   function onChange(e) {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   }
 
   async function onSubmit(e) {
     e.preventDefault();
+
+    const errors = [];
+
+    if (!email) {
+      errors.push("Please fill in your email address");
+    }
+    if (!password) {
+      errors.push("Please enter a password");
+    }
+
+    if (errors.length > 0) {
+      toast.error(errors.join(", "));
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      if (user) {
+        // User is signed in
+        toast.success("You have successfully signed in!");
+        navigate("/");
+      } else {
+        // User is signed out
+        toast.warning("You have successfully signed out!");
+      }
+      await onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in
+          const uid = user.uid;
+        } else {
+          // User is signed out
+        }
+      });
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+
+      if (errorCode === "auth/invalid-email") {
+        toast.error("Invalid email address");
+      } else if (errorCode === "auth/weak-password") {
+        toast.error("Password must be at least 6 characters long");
+      } else {
+        toast.error(errorMessage);
+      }
+    }
   }
 
   return (

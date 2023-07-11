@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import OAuth from "../components/OAuth";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { auth, db } from "../Firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -56,8 +56,14 @@ const SignUp = () => {
       });
 
       await setDoc(doc(db, "users", user.uid), formDataCopy);
+
+      await sendEmailVerification(auth.currentUser).then(() => {
+        // Email verification sent!
+        toast.warning("Please Check Your for Email Verification");
+      });
+
       toast.success("You have successfully signed up!");
-      navigate("/")
+      navigate("/");
     } catch (error) {
       toast.error(error.message);
     }

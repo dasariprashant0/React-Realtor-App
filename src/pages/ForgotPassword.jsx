@@ -1,16 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { auth } from "../Firebase";
+import { toast } from "react-toastify";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
 
   function onChange(e) {
-   setEmail(e.target.value)
+    setEmail(e.target.value);
   }
 
   async function onSubmit(e) {
     e.preventDefault();
+
+    await sendPasswordResetEmail(auth, email)
+      .then(() => {
+        // Password reset email sent!
+        toast.success("Check your email to reset your password")
+      })
+      .catch((error) => {
+        toast.error(error.message)
+      });
   }
 
   return (
@@ -76,6 +88,6 @@ const ForgotPassword = () => {
       </div>
     </section>
   );
-}
+};
 
-export default ForgotPassword
+export default ForgotPassword;

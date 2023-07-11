@@ -33,7 +33,7 @@ const ForgotPassword = () => {
                 type="email"
                 id="email"
                 placeholder="EmaIl Address"
-                required={true}
+                // required={true}
                 value={email}
                 onChange={onChange}
                 className="text-input"

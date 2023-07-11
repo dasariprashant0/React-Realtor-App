@@ -39,7 +39,7 @@ const SignIn = () => {
                 type="email"
                 id="email"
                 placeholder="EmaIl Address"
-                required={true}
+                // required={true}
                 value={email}
                 onChange={onChange}
                 className="text-input"
@@ -50,7 +50,7 @@ const SignIn = () => {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder="Password"
-                required={true}
+                // required={true}
                 value={password}
                 onChange={onChange}
                 className="text-input"

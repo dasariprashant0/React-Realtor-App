@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import OAuth from "../components/OAuth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "../Firebase";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,14 +15,53 @@ const SignUp = () => {
     password: "",
   });
   const { name, email, password } = formData;
+  const navigate = useNavigate();
 
   function onChange(e) {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   }
 
-  async function onSubmit(e) {
+  const onSubmit = async (e) => {
     e.preventDefault();
-  }
+
+    const errors = [];
+    if (!name) {
+      errors.push("Please fill in your name");
+    }
+    if (!email) {
+      errors.push("Please fill in your email address");
+    }
+    if (!password) {
+      errors.push("Please enter a password");
+    }
+
+    if (errors.length > 0) {
+      toast.error(errors.join(", "));
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      const formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      await updateProfile(auth.currentUser, {
+        displayName: name,
+      });
+
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      toast.success("You have successfully signed up!");
+      navigate("/")
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <section>
@@ -40,7 +83,7 @@ const SignUp = () => {
                 type="text"
                 id="name"
                 placeholder="Full Name"
-                required={true}
+                // required={true}
                 value={name}
                 onChange={onChange}
                 className="text-input"
@@ -51,7 +94,7 @@ const SignUp = () => {
                 type="email"
                 id="email"
                 placeholder="EmaIl Address"
-                required={true}
+                // required={true}
                 value={email}
                 onChange={onChange}
                 className="text-input"
@@ -62,7 +105,7 @@ const SignUp = () => {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder="Password"
-                required={true}
+                // required={true}
                 value={password}
                 onChange={onChange}
                 className="text-input"

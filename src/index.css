@@ -8,7 +8,7 @@ body {
 
 @layer base {
     .text-input {
-        @apply w-full px-4 py-2 text-lg lg:text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out
+        @apply w-full px-4 py-2 text-lg lg:text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out
     }
 
     .showPassword {

@@ -4,7 +4,7 @@ import { auth } from "../Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 const Header = () => {
-  const [pageState, setPageState] = useState("");
+  const [pageState, setPageState] = useState("Sign In");
   const location = useLocation();
   const navigate = useNavigate();
 

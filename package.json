@@ -9,7 +9,7 @@
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "tailwind": "npx tailwindcss -i ./src/index.css -o ./build/css/style.css --watch",
-    "prettier": "npx prettier --write ./*.html"
+    "prettier": "npx prettier --write **/*.{js,ts,jsx,tsx,html,css}"
   },
   "dependencies": {
     "firebase": "^10.0.0",

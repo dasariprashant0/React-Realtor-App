@@ -4,6 +4,8 @@ import { signOut, updateProfile } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { doc, updateDoc } from "firebase/firestore";
+import { FcHome } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const [changeDetail, setChangeDetail] = useState(false);
@@ -47,7 +49,7 @@ const Profile = () => {
 
       toast.success("Changes Applied Successfully.");
     } catch (error) {
-      toast.error("Could not apply changes. Please Try Again Later !!!")
+      toast.error("Could not apply changes. Please Try Again Later !!!");
     }
   }
 
@@ -100,11 +102,19 @@ const Profile = () => {
               Sign out
             </p>
           </div>
-
-          <button className="flex justify-center items-center bg-blue-700 w-full text-white rounded py-2 px-7 uppercase text-sm font-medium hover:bg-blue-600 active:bg-blue-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out">
-            sell or rent your home
-          </button>
         </form>
+        <button
+          type="submit"
+          className="bg-blue-700 w-full text-white rounded py-3 px-7 uppercase text-sm font-medium hover:bg-blue-600 active:bg-blue-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out"
+        >
+          <Link
+            to={"/profile/create-listing"}
+            className="flex items-center justify-center"
+          >
+            <FcHome className="mr-2 text-3xl bg-red-200 rounded-full p-1 border-2" />
+            sell or rent your home
+          </Link>
+        </button>
       </div>
     </section>
   );

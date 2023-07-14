@@ -13,7 +13,7 @@ const CreateListing = () => {
     offer: false,
     regularPrice: 0,
     discountedPrice: 0,
-    images:"",
+    images: "",
   });
 
   const {
@@ -28,10 +28,33 @@ const CreateListing = () => {
     offer,
     regularPrice,
     discountedPrice,
-    images
+    images,
   } = formData;
 
-  function onChange() {}
+  function onChange(e) {
+    let boolean = null;
+    if (e.target.value === "true") {
+      boolean = true;
+    }
+    if (e.target.value === "false") {
+      boolean = false;
+    }
+
+    // Files
+    if (e.target.files) {
+      setFormData((prev) => ({
+        ...prev,
+        images: e.target.files,
+      }));
+    }
+
+    // Text/Boolean/Number
+    if (!e.target.files)
+      setFormData((prev) => ({
+        ...prev,
+        [e.target.id]: boolean ?? e.target.value,
+      }));
+  }
   return (
     <main className="max-w-md px-2 mx-auto">
       <h1 className="text-3xl font-bold mt-6 text-center">Create a Listing</h1>
@@ -54,7 +77,7 @@ const CreateListing = () => {
           <button
             type="button"
             id="type"
-            value={"sell"}
+            value={"rent"}
             onClick={onChange}
             className={`ml-3 shadow-md px-7 py-3 font-medium text-sm uppercase rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-150 ease-in-out w-full ${
               type === "sell"
@@ -253,20 +276,28 @@ const CreateListing = () => {
         )}
         <div>
           <p className="listingHeader">Images</p>
-          <p className="text-gray-600">The first image will be the cover (max 6)</p>
+          <p className="text-gray-600">
+            The first image will be the cover (max 6)
+          </p>
           <input
             type="file"
             name="images"
             id="images"
             onChange={onChange}
-            multiple={'6'}
+            multiple={"6"}
             required
             accept=".jpeg, .png, .jpg"
             className="w-full bg-white px-3 py-1.5 text-gray-700 border border-gray-300 rounded transition duration-150 ease-in-out focus:bg-white focus:border-slate-600"
           />
         </div>
 
-        <button type="submit" className="my-9 w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-sm hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"> Create Listing </button>
+        <button
+          type="submit"
+          className="my-9 w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-sm hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+        >
+          {" "}
+          Create Listing{" "}
+        </button>
       </form>
     </main>
   );

@@ -3,19 +3,19 @@
 @tailwind utilities;
 
 body {
-    background-color: rgb(240, 253, 244);
+  background-color: rgb(240, 253, 244);
 }
 
 @layer base {
-    .text-input {
-        @apply w-full px-4 py-2 text-lg lg:text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out
-    }
+  .text-input {
+    @apply w-full px-4 py-2 text-lg lg:text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out;
+  }
 
-    .showPassword {
-        @apply absolute right-3 top-3 text-xl cursor-pointer
-    }
+  .showPassword {
+    @apply absolute right-3 top-3 text-xl cursor-pointer;
+  }
 
-    .listingHeader {
-        @apply font-semibold text-lg mt-6
-    }
+  .listingHeader {
+    @apply font-semibold text-lg mt-6;
+  }
 }

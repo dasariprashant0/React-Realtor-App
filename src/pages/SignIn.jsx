@@ -41,25 +41,20 @@ const SignIn = () => {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const user = userCredential.user;
 
       if (user) {
         // User is signed in
-        toast.success("You have successfully signed in!");
+        toast.success("You have signed in successfully!");
         navigate("/");
-      } else {
-        // User is signed out
-        toast.warning("You have successfully signed out!");
-      }
-      await onAuthStateChanged(auth, (user) => {
+      } 
+        await onAuthStateChanged(auth, (user) => {
         if (user) {
           // User is signed in
           const uid = user.uid;
-        } else {
-          // User is signed out
-        }
+        } 
       });
     } catch (error) {
       const errorCode = error.code;
@@ -67,8 +62,8 @@ const SignIn = () => {
 
       if (errorCode === "auth/invalid-email") {
         toast.error("Invalid email address");
-      } else if (errorCode === "auth/weak-password") {
-        toast.error("Password must be at least 6 characters long");
+      } else if (errorCode === "auth/wrong-password") {
+        toast.error("Password is not correct. Please Check Again.");
       } else {
         toast.error(errorMessage);
       }

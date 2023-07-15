@@ -7,8 +7,7 @@ import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
 
 const OAuth = () => {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onGoogleClick = async () => {
     try {
@@ -18,7 +17,7 @@ const OAuth = () => {
 
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
-  
+
       if (!docSnap.exists()) {
         await setDoc(docRef, {
           name: user.displayName,
@@ -27,8 +26,8 @@ const OAuth = () => {
         });
       }
 
-      toast.success("You have successfully signed in!");
-      navigate("/")
+      toast.success("You have signed in successfully!");
+      navigate("/");
     } catch (error) {
       toast.error("Could not authorize with Google Authentication");
     }

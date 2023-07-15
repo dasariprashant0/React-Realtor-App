@@ -108,7 +108,7 @@ const Profile = () => {
           className="bg-blue-700 w-full text-white rounded py-3 px-7 uppercase text-sm font-medium hover:bg-blue-600 active:bg-blue-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out"
         >
           <Link
-            to={"/profile/create-listing"}
+            to={"/create-listing"}
             className="flex items-center justify-center"
           >
             <FcHome className="mr-2 text-3xl bg-red-200 rounded-full p-1 border-2" />

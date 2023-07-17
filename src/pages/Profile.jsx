@@ -1,13 +1,24 @@
-import React, { useState } from "react";
-import { auth, db } from "../Firebase";
+import React, { useEffect, useState } from "react";
+import { auth, db } from "../firebase";
 import { signOut, updateProfile } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { FcHome } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import ListingItem from "../components/ListingItem";
 
 const Profile = () => {
+  const [listings, setListings] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [changeDetail, setChangeDetail] = useState(false);
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
@@ -53,70 +64,110 @@ const Profile = () => {
     }
   }
 
+  useEffect(() => {
+    async function fetchUserListings() {
+      const listingRef = collection(db, "listings");
+      const q = query(
+        listingRef,
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timestamp", "desc")
+      );
+      const querySnap = await getDocs(q);
+      let listings = [];
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+      setListings(listings);
+      setLoading(false);
+    }
+    fetchUserListings();
+  }, [auth.currentUser.uid]);
+
   return (
-    <section className="max-w-6xl mx-auto flex flex-col justify-center items-center">
-      <h1 className="text-center mt-6 text-3xl font-bold">My Profile</h1>
+    <>
+      <section className="max-w-6xl mx-auto flex flex-col justify-center items-center">
+        <h1 className="text-center mt-6 text-3xl font-bold">My Profile</h1>
 
-      <div className="w-full md:w-[60%] mt-6 px-3">
-        <form action="">
-          {/* Name Input */}
+        <div className="w-full md:w-[60%] mt-6 px-3">
+          <form action="">
+            {/* Name Input */}
 
-          <input
-            type="text"
-            id="name"
-            value={name}
-            disabled={!changeDetail}
-            onChange={onChange}
-            className={`text-input mb-6 ${
-              changeDetail && "bg-red-200 focus:bg-red-200"
-            }`}
-          />
+            <input
+              type="text"
+              id="name"
+              value={name}
+              disabled={!changeDetail}
+              onChange={onChange}
+              className={`text-input mb-6 ${
+                changeDetail && "bg-red-200 focus:bg-red-200"
+              }`}
+            />
 
-          {/* Email Input */}
+            {/* Email Input */}
 
-          <input
-            type="email"
-            id="email"
-            value={email}
-            disabled
-            className={`text-input mb-6`}
-          />
+            <input
+              type="email"
+              id="email"
+              value={email}
+              disabled
+              className={`text-input mb-6`}
+            />
 
-          <div className="flex justify-between items-center whitespace-nowrap text-sm sm:text-lg mb-6">
-            <p>
-              Do you want to change your name?{" "}
-              <span
-                onClick={() => {
-                  changeDetail && onSubmit();
-                  setChangeDetail((prevState) => !prevState);
-                }}
-                className="text-red-600 hover:text-red-700 transition duration-200 ease-in-out ml-1 cursor-pointer"
+            <div className="flex justify-between items-center whitespace-nowrap text-sm sm:text-lg mb-6">
+              <p>
+                Do you want to change your name?{" "}
+                <span
+                  onClick={() => {
+                    changeDetail && onSubmit();
+                    setChangeDetail((prevState) => !prevState);
+                  }}
+                  className="text-red-600 hover:text-red-700 transition duration-200 ease-in-out ml-1 cursor-pointer"
+                >
+                  {changeDetail ? "Apply Change" : "Edit"}
+                </span>
+              </p>
+              <p
+                className="text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out ml-1 cursor-pointer"
+                onClick={onSignOut}
               >
-                {changeDetail ? "Apply Change" : "Edit"}
-              </span>
-            </p>
-            <p
-              className="text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out ml-1 cursor-pointer"
-              onClick={onSignOut}
-            >
-              Sign out
-            </p>
-          </div>
-        </form>
-        <button
-          type="submit"
-          className="bg-blue-700 w-full text-white rounded py-3 px-7 uppercase text-sm font-medium hover:bg-blue-600 active:bg-blue-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out"
-        >
-          <Link
-            to={"/create-listing"}
-            className="flex items-center justify-center"
+                Sign out
+              </p>
+            </div>
+          </form>
+          <button
+            type="submit"
+            className="bg-blue-700 w-full text-white rounded py-3 px-7 uppercase text-sm font-medium hover:bg-blue-600 active:bg-blue-900 shadow-md hover:shadow-lg active:shadow-lg transition duration-150 ease-in-out"
           >
-            <FcHome className="mr-2 text-3xl bg-red-200 rounded-full p-1 border-2" />
-            sell or rent your home
-          </Link>
-        </button>
+            <Link
+              to={"/create-listing"}
+              className="flex items-center justify-center"
+            >
+              <FcHome className="mr-2 text-3xl bg-red-200 rounded-full p-1 border-2" />
+              sell or rent your home
+            </Link>
+          </button>
+        </div>
+      </section>
+      <div className="max-w-6xl px-3 mt-6 mx-auto">
+        {!loading && listings.length > 0 && (
+          <>
+            <h2 className="text-2xl text-center font-semibold">My Listings</h2>
+            <ul>
+              {listings.map((listing) => (
+                <ListingItem
+                  key={listing.id}
+                  id={listing.id}
+                  listing={listing.data}
+                />
+              ))}
+            </ul>
+          </>
+        )}
       </div>
-    </section>
+    </>
   );
 };
 

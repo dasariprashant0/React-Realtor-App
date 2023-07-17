@@ -7,9 +7,9 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import { auth, db } from "../Firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { auth, db } from "../firebase";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);

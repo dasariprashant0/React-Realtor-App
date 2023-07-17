@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { auth, storage } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useNavigate } from "react-router";
 
 const CreateListing = () => {
+  const navigate = useNavigate()
   const [geolocationEnabled, setGeoLocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -139,15 +142,29 @@ const CreateListing = () => {
     }
 
     const imgUrls = await Promise.all(
-      [...images]
-        .map((image) => storeImage(image))
-        .catch((error) => {
-          setLoading(false);
-          toast.error("Images not Uploaded");
-          return;
-        })
-    );
+      [...images].map((image) => storeImage(image))
+    ).catch((error) => {
+      setLoading(false);
+      toast.error("Images not Uploaded");
+      return;
+    });
     console.log(imgUrls);
+
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+    };
+    delete formDataCopy.images;
+    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+    delete formDataCopy.latitude;
+    delete formDataCopy.longitude
+
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
+    setLoading(false);
+    toast.success("Listing Created.");
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
   }
 
   if (loading) {

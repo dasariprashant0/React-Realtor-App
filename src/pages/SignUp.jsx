@@ -9,7 +9,8 @@ import {
 } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
-import { auth, db } from "../firebase";
+import { auth, db } from "../Firebase";
+
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);

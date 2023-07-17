@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { auth, db } from "../Firebase";
@@ -12,8 +12,11 @@ const OAuth = () => {
   const onGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+      auth.languageCode = 'it';
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      
 
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);

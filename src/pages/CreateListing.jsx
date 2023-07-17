@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { auth, db, storage } from "../firebase";
+import { auth, db, storage } from "../Firebase";
 import { v4 as uuidv4 } from "uuid";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router";

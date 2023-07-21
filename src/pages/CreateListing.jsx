@@ -8,7 +8,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router";
 
 const CreateListing = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [geolocationEnabled, setGeoLocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -84,26 +84,31 @@ const CreateListing = () => {
       return;
     }
     let geolocation = {};
-    let location;
+
+    // Check if geolocation is enabled
     if (geolocationEnabled) {
-      const MAPBOX_ACCESS_TOKEN = `pk.eyJ1IjoiZGFzYXJpcHJhc2hhbnQwIiwiYSI6ImNsazN4bjNpNDA1eDIzZXIwNW01bmJudDMifQ.lLF-5H691kMqcSmHdF9hEQ`;
+      const MAPBOX_ACCESS_TOKEN =
+        "pk.eyJ1IjoiZGFzYXJpcHJhc2hhbnQwIiwiYSI6ImNsazN4bjNpNDA1eDIzZXIwNW01bmJudDMifQ.lLF-5H691kMqcSmHdF9hEQ";
+
+      // Fetch data from Mapbox Geocoding API
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_ACCESS_TOKEN}`
       );
       const data = await response.json();
       console.log(data);
+
+      // Get the latitude and longitude coordinates from the API response
       geolocation.lat = data.features[0]?.geometry.coordinates[0] ?? 0;
-      geolocation.long = data.features[0]?.geometry.coordinates[1] ?? 0;
+      geolocation.lng = data.features[0]?.geometry.coordinates[1] ?? 0;
 
-      location = data.status === "ZERO_RESULTS" && undefined;
-      console.log(location);
-
-      if (data.features.length === 0) {
+      // Check if the API response has ZERO_RESULTS
+      if (data.status === "ZERO_RESULTS") {
         setLoading(false);
         toast.error("No results found for the given address");
         return;
       }
     } else {
+      // If geolocation is not enabled, use the provided latitude and longitude
       geolocation.lat = latitude;
       geolocation.lng = longitude;
     }
@@ -155,17 +160,17 @@ const CreateListing = () => {
       imgUrls,
       geolocation,
       timestamp: serverTimestamp(),
-      userRef: auth.currentUser.uid
+      userRef: auth.currentUser.uid,
     };
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
     delete formDataCopy.latitude;
-    delete formDataCopy.longitude
+    delete formDataCopy.longitude;
 
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
     toast.success("Listing Created.");
-    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   }
 
   if (loading) {

@@ -87,8 +87,8 @@ const CreateListing = () => {
 
     // Check if geolocation is enabled
     if (geolocationEnabled) {
-      const MAPBOX_ACCESS_TOKEN =
-        "pk.eyJ1IjoiZGFzYXJpcHJhc2hhbnQwIiwiYSI6ImNsazN4bjNpNDA1eDIzZXIwNW01bmJudDMifQ.lLF-5H691kMqcSmHdF9hEQ";
+      const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_API_KEY;
+      // "pk.eyJ1IjoiZGFzYXJpcHJhc2hhbnQwIiwiYSI6ImNsazN4bjNpNDA1eDIzZXIwNW01bmJudDMifQ.lLF-5H691kMqcSmHdF9hEQ";
 
       // Fetch data from Mapbox Geocoding API
       const response = await fetch(

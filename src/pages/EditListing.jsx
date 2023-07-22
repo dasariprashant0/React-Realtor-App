@@ -119,7 +119,7 @@ const EditListing = () => {
     let geolocation = {};
     let location;
     if (geolocationEnabled) {
-      const MAPBOX_ACCESS_TOKEN = `pk.eyJ1IjoiZGFzYXJpcHJhc2hhbnQwIiwiYSI6ImNsazN4bjNpNDA1eDIzZXIwNW01bmJudDMifQ.lLF-5H691kMqcSmHdF9hEQ`;
+      const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_API_KEY;
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${MAPBOX_ACCESS_TOKEN}`
       );

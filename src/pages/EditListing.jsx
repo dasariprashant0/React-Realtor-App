@@ -126,7 +126,7 @@ const EditListing = () => {
       const data = await response.json();
       console.log(data);
       geolocation.lat = data.features[0]?.geometry.coordinates[0] ?? 0;
-      geolocation.long = data.features[0]?.geometry.coordinates[1] ?? 0;
+      geolocation.lng = data.features[0]?.geometry.coordinates[1] ?? 0;
 
       location = data.status === "ZERO_RESULTS" && undefined;
       console.log(location);

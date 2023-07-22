@@ -151,7 +151,7 @@ const Listing = () => {
             <div>No location data available.</div>
           ) : (
             <MapContainer
-              center={[listings.geolocation.long, listings.geolocation.lat]}
+              center={[listings.geolocation.lng, listings.geolocation.lat]}
               zoom={15}
               scrollWheelZoom={false}
               style={{ height: "400px", width: "100%" }}
@@ -161,7 +161,7 @@ const Listing = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <Marker
-                position={[listings.geolocation.long, listings.geolocation.lat]}
+                position={[listings.geolocation.lng, listings.geolocation.lat]}
               >
                 <Popup>{listings.address}</Popup>
               </Marker>

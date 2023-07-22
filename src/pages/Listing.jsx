@@ -17,6 +17,11 @@ import {
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Contact from "../components/Contact";
+import { Icon } from "leaflet";
+
+const Red_MARKER = `data:image/svg+xml;utf8,${encodeURIComponent(`<?xml version="1.0" encoding="iso-8859-1"?>
+    <svg version="1.1" id="icons" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 128 128" style="enable-background:new 0 0 128 128" xml:space="preserve"><style>.st0,.st1{display:none;fill:#191919}.st1,.st4{fill-rule:evenodd;clip-rule:evenodd}.st4,.st5{display:inline;fill:#191919}</style><g id="row1"><path id="nav:4" d="M64 1C38.8 1 18.3 21.2 18.3 46S64 127 64 127s45.7-56.2 45.7-81S89.2 1 64 1zm0 73.9c-16.6 0-30-13.2-30-29.5C34 29 47.4 15.8 64 15.8S94 29 94 45.3 80.6 74.9 64 74.9z" style="fill-rule:evenodd;clip-rule:evenodd;fill:#191919"/></g></svg>
+    `)}`;
 
 const Listing = () => {
   const params = useParams();
@@ -24,6 +29,10 @@ const Listing = () => {
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
   const [contactLandlord, setContactLandlord] = useState(false);
+  const ICON = new Icon({
+    iconUrl: Red_MARKER,
+    iconSize: [32, 32],
+  });
 
   useEffect(() => {
     async function fetchListing() {
@@ -162,6 +171,7 @@ const Listing = () => {
               />
               <Marker
                 position={[listings.geolocation.lng, listings.geolocation.lat]}
+                icon={ICON}
               >
                 <Popup>{listings.address}</Popup>
               </Marker>

@@ -153,7 +153,7 @@ const Home = () => {
             <h2 className="px-3 text-2xl mt-6 font-semibold">Recent offers</h2>
             <Link to={"/category/sell"} className="">
               <p className=" px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out cursor-pointer">
-                Show more places for rent
+                Show more places for sell
               </p>
             </Link>
             <ul className="sm:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
